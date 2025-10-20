@@ -1,5 +1,9 @@
 import pandas as pd
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+AIXPLAIN_API_KEY = os.getenv("AIXPLAIN_API_KEY")
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -61,6 +65,9 @@ def retrieve_documents(query, vectorizer, tfidf_matrix, documents, top_k=5):
 
 if __name__ == "__main__":
     print("Loading and preparing data...")
+    if not AIXPLAIN_API_KEY:
+        print("AIXPLAIN_API_KEY not found. Please set it in a .env file.")
+        exit()
     documents = load_and_prepare_data()
     if not documents.empty:
         print(f"Total documents for RAG: {len(documents)}")

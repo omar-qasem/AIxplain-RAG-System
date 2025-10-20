@@ -1,4 +1,3 @@
-'''
 # Agentic RAG System for Government Regulations
 
 This project implements a Retrieval-Augmented Generation (RAG) system to answer questions about government regulations, using data from Kaggle and the EPA. The system is designed to be a simple, yet effective, tool for searching and retrieving relevant information from a combined corpus of documents.
@@ -31,8 +30,8 @@ The core of this project is a RAG agent that leverages a TF-IDF vector store to 
 1.  Clone the repository:
 
     ```bash
-    git clone <repository-url>
-    cd <repository-name>
+    git clone https://github.com/omar-qasem/AIxplain-RAG-System.git
+    cd AIxplain-RAG-System
     ```
 
 2.  Install the required packages:
@@ -40,6 +39,23 @@ The core of this project is a RAG agent that leverages a TF-IDF vector store to 
     ```bash
     pip install -r requirements.txt
     ```
+
+### 🔑 API Key Setup
+
+1.  Get your aiXplain API key from [aixplain.com](https://aixplain.com)
+2.  Create a `.env` file in the project root by copying the example:
+
+    ```bash
+    cp .env.example .env
+    ```
+
+3.  Open the newly created `.env` file and paste your actual aiXplain API key:
+
+    ```env
+    AIXPLAIN_API_KEY=your_actual_key_here
+    ```
+
+    **Note**: Replace `your_actual_key_here` with the key you obtained from aiXplain. This file is ignored by Git to keep your key secure.
 
 ### Usage
 
@@ -55,13 +71,16 @@ Once the agent is initialized, you can type your query and press Enter. To exit 
 
 ```
 .aixplain_rag_project/
+├── .env.example
+├── .gitignore
 ├── cli_rag_agent.py
 ├── download_ai_governance_dataset.py
 ├── download_dataset.py
 ├── guidance_ow.csv
 ├── inspect_kaggle_csv.py
 ├── rag_system.py
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 *   `cli_rag_agent.py`: The main script for the command-line interface.
@@ -72,4 +91,3 @@ Once the agent is initialized, you can type your query and press Enter. To exit 
 *   `inspect_kaggle_csv.py`: A script used for debugging the initial Kaggle dataset.
 *   `README.md`: This file.
 
-'''
