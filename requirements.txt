@@ -33,7 +33,7 @@ jmespath==1.0.1
 joblib==1.5.2
 kagglehub==0.3.13
 kiwisolver==1.4.9
-lxml==6.0.2
+lxml
 markdown==3.9
 markupsafe==3.0.3
 matplotlib==3.10.6

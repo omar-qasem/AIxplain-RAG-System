@@ -9,8 +9,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 # Define paths to the datasets
-ai_governance_dataset_dir = "/home/ubuntu/.cache/kagglehub/datasets/umerhaddii/ai-governance-documents-data/versions/1/agora"
-ai_governance_documents_path = os.path.join(ai_governance_dataset_dir, "documents.csv")
+ai_governance_dataset_dir = "data/ai-governance-documents-data/agora"
+ai_governance_documents_path = os.path.join(os.getcwd(), ai_governance_dataset_dir, "documents.csv")
 epa_dataset_path = "guidance_ow.csv"
 
 def load_and_prepare_data():

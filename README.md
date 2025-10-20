@@ -27,18 +27,29 @@ The core of this project is a RAG agent that leverages a TF-IDF vector store to 
 
 ### Installation
 
-1.  Clone the repository:
+1.  **Clone the Repository**:
 
     ```bash
     git clone https://github.com/omar-qasem/AIxplain-RAG-System.git
     cd AIxplain-RAG-System
     ```
 
-2.  Install the required packages:
+2.  **Install Required Packages**:
 
     ```bash
     pip install -r requirements.txt
     ```
+
+3.  **Download Datasets**:
+
+    *   **AI Governance Documents Data**: This dataset needs to be downloaded manually from Kaggle.
+        1.  Go to the Kaggle dataset page: [AI Governance Documents Data](https://www.kaggle.com/datasets/umerhaddii/ai-governance-documents-data)
+        2.  Download the `documents.csv` file.
+        3.  Create the following directory structure within your `AIxplain-RAG-System` folder:
+            `data/ai-governance-documents-data/agora/`
+        4.  Place the downloaded `documents.csv` file into the `agora` folder.
+
+    *   **EPA Guidance Documents**: The `guidance_ow.csv` file is already included in the repository.
 
 ### 🔑 API Key Setup
 
@@ -62,7 +73,9 @@ The core of this project is a RAG agent that leverages a TF-IDF vector store to 
 To run the CLI for the RAG agent, execute the following command:
 
 ```bash
-python3.11 cli_rag_agent.py
+python cli_rag_agent.py
+# OR (if 'python' doesn't work)
+py cli_rag_agent.py
 ```
 
 Once the agent is initialized, you can type your query and press Enter. To exit the agent, type `exit`.
@@ -70,7 +83,11 @@ Once the agent is initialized, you can type your query and press Enter. To exit 
 ## Project Structure
 
 ```
-.aixplain_rag_project/
+AIxplain-RAG-System/
+├── data/
+│   └── ai-governance-documents-data/
+│       └── agora/
+│           └── documents.csv
 ├── .env.example
 ├── .gitignore
 ├── cli_rag_agent.py
