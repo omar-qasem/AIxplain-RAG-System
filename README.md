@@ -1,101 +1,316 @@
-# Agentic RAG System for Government Regulations
+# AI-Powered RAG System with PDF Support
 
-This project implements a Retrieval-Augmented Generation (RAG) system to answer questions about government regulations, using data from Kaggle and the EPA. The system is designed to follow a precise, three-step process: **User Prompt → Document Search → Concise LLM Answer**.
+An intelligent Retrieval-Augmented Generation (RAG) system that allows you to upload PDF documents and ask questions about them. The system uses **aiXplain's GPT-4o Mini** to generate accurate, context-aware answers from your documents.
 
-## Project Overview
+## 🚀 Key Features
 
-The core of this project is a RAG agent that leverages a TF-IDF vector store to find documents relevant to a user's query. The most relevant documents are then passed to a Large Language Model (LLM) to generate a **concise, context-grounded answer, free of unnecessary information.**
+- **📄 PDF Upload**: Upload multiple PDF documents through an intuitive web interface
+- **🤖 AI-Powered Answers**: Get intelligent answers using GPT-4o Mini via aiXplain API
+- **🔍 Smart Search**: TF-IDF based document retrieval with context-aware answer generation
+- **💬 Natural Q&A**: Ask questions in natural language about your uploaded documents
+- **📊 Document Management**: Track uploaded PDFs and indexed documents
+- **🎨 Modern UI**: Beautiful, responsive interface with real-time feedback
 
-### Key Features
+## 🏗️ Architecture
 
-*   **Precise RAG Workflow:** User query is answered based *only* on retrieved documents.
-*   **Concise Answering:** The LLM is strictly prompted to provide a direct answer without extraneous details.
-*   **Data Ingestion:** Loads and combines data from AI Governance documents and EPA Guidance documents.
-*   **Vector Store:** Creates a TF-IDF vector store for efficient document retrieval.
+### Backend (FastAPI + Python)
+- FastAPI server with async support
+- PDF text extraction using PyPDF2
+- TF-IDF vectorization for document retrieval
+- aiXplain API integration for answer generation
+- RESTful API endpoints
 
-## Getting Started: Running the Demo
+### Frontend (React)
+- Modern React UI with Tailwind CSS
+- Drag-and-drop PDF upload
+- Real-time search and results
+- Responsive design
 
-Follow these steps to set up the environment, download the necessary data, and run the improved RAG demo.
+## 📋 Prerequisites
 
-### 1. Prerequisites
+- **Python 3.11+**
+- **Node.js 16+** and **yarn**
+- **aiXplain API Key** ([Get one here](https://aixplain.com))
 
-*   Python 3.11+
-*   An **OpenAI API Key** for the final LLM generation step.
+## 🔧 Installation & Setup
 
-### 2. Setup
-
-**A. Clone the Repository**
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/omar-qasem/AIxplain-RAG-System.git
+git clone <repository-url>
 cd AIxplain-RAG-System
 ```
 
-**B. Install Required Packages**
+### 2. Backend Setup
 
 ```bash
+# Navigate to backend directory
+cd backend
+
+# Create virtual environment (optional but recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Create .env file with your API key
+cat > .env << EOF
+AIXPLAIN_API_KEY=your_actual_api_key_here
+AIXPLAIN_API_URL=https://api.aixplain.com/v1
+EOF
+
+# Replace 'your_actual_api_key_here' with your actual aiXplain API key
 ```
 
-**C. Configure API Key**
-
-The RAG system uses an LLM (via the OpenAI API) to generate the final, concise answer.
-
-1.  Create a file named `.env` in the root of the project directory.
-2.  Add your OpenAI API key to the file in the following format:
-
-    ```env
-    OPENAI_API_KEY="YOUR_ACTUAL_OPENAI_KEY_HERE"
-    ```
-
-    *Note: The original `AIXPLAIN_API_KEY` environment variable is no longer used in the main demo script (`rag_system.py`), which now uses the standard `OPENAI_API_KEY` for the LLM step.*
-
-### 3. Download Data
-
-The RAG system relies on two external datasets.
+### 3. Frontend Setup
 
 ```bash
-# Download the EPA Guidance dataset (optional, as guidance_ow.csv is included)
-python3 download_dataset.py
+# Navigate to frontend directory
+cd ../frontend
 
-# Download the AI Governance dataset (REQUIRED)
-python3 download_ai_governance_dataset.py
+# Install dependencies
+yarn install
+
+# Create .env file
+cat > .env << EOF
+REACT_APP_BACKEND_URL=http://localhost:8001
+EOF
 ```
 
-These scripts will place the necessary CSV files in the correct locations for the `rag_system.py` script to find them.
+## 🚀 Running the Application
 
-### 4. Run the Demo
+### Option 1: Using Supervisor (Production-like)
 
-The `rag_system.py` script is configured to run two example queries and demonstrate the full RAG workflow, including the final concise LLM answer.
+If supervisor is configured:
 
 ```bash
-python3 rag_system.py
+# Start all services
+sudo supervisorctl restart all
+
+# Check status
+sudo supervisorctl status
 ```
 
-**Expected Output Flow:**
+### Option 2: Manual Start (Development)
 
-The script will first load the data and build the vector store. For each query, you will see:
+**Terminal 1 - Backend:**
+```bash
+cd backend
+python server.py
+# Backend will run on http://localhost:8001
+```
 
-1.  The query being executed.
-2.  The top 5 **Retrieved Documents** (the search step).
-3.  The **Final Answer** (the analysis and concise answering step, generated by the LLM based on the retrieved documents).
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+yarn start
+# Frontend will run on http://localhost:3000
+```
 
----
+## 🎯 How to Use
 
-## Project Structure
+### 1. **Start the Application**
+   - Backend: `http://localhost:8001`
+   - Frontend: `http://localhost:3000`
+
+### 2. **Upload PDF Documents**
+   - Click the upload area or drag and drop PDF files
+   - Wait for processing (text extraction and indexing)
+   - See confirmation with page count and chunks created
+
+### 3. **Ask Questions**
+   - Type your question in the search box
+   - Click "Ask AI" or press Enter
+   - Get AI-generated answers with source citations
+
+### 4. **View Results**
+   - See the AI-generated answer
+   - Review source documents that were used
+   - Click links to view original documents (if available)
+
+## 📚 API Endpoints
+
+### Backend API (`http://localhost:8001`)
+
+#### Health Check
+```bash
+GET /api/health
+# Returns: system status, document count, PDF count, AI status
+```
+
+#### Upload PDF
+```bash
+POST /api/upload-pdf
+Content-Type: multipart/form-data
+Body: file (PDF)
+
+# Returns: upload status, pages, chunks created
+```
+
+#### Search & Ask Question
+```bash
+POST /api/search
+Content-Type: application/json
+Body: {
+  "query": "What is AI governance?",
+  "top_k": 5
+}
+
+# Returns: AI answer, source documents, model used
+```
+
+#### Get Uploaded PDFs
+```bash
+GET /api/uploaded-pdfs
+# Returns: list of uploaded PDFs with metadata
+```
+
+## 📁 Project Structure
 
 ```
 AIxplain-RAG-System/
-├── .env                  # Your API Key configuration (add this file)
-├── .gitignore
-├── backend/              # (Existing directory)
-├── cli_rag_agent.py      # (Existing CLI, not updated for LLM generation)
-├── download_ai_governance_dataset.py
-├── download_dataset.py
-├── frontend/             # (Existing directory)
-├── guidance_ow.csv
-├── inspect_kaggle_csv.py
-├── rag_system.py         # **Updated with full RAG workflow and LLM generation**
-├── README.md             # This file
-└── requirements.txt
+├── backend/
+│   ├── server.py              # FastAPI application
+│   ├── requirements.txt       # Python dependencies
+│   └── .env                   # Backend environment variables
+├── frontend/
+│   ├── src/
+│   │   ├── App.js            # Main React component
+│   │   ├── App.css           # Tailwind styles
+│   │   └── index.js          # React entry point
+│   ├── package.json          # Node dependencies
+│   └── .env                  # Frontend environment variables
+├── guidance_ow.csv           # EPA guidance documents (default data)
+├── cli_rag_agent.py          # Command-line interface (legacy)
+├── rag_system.py             # Core RAG logic (legacy)
+└── README.md                 # This file
 ```
+
+## 🔑 Environment Variables
+
+### Backend (.env)
+```env
+AIXPLAIN_API_KEY=your_aixplain_api_key
+AIXPLAIN_API_URL=https://api.aixplain.com/v1
+```
+
+### Frontend (.env)
+```env
+REACT_APP_BACKEND_URL=http://localhost:8001
+```
+
+## 🛠️ Configuration
+
+### aiXplain Model
+The system uses **GPT-4o Mini** (ID: `669a63646eb56306647e1091`) by default. To change the model:
+
+1. Edit `backend/server.py`
+2. Find `ModelFactory.get("669a63646eb56306647e1091")`
+3. Replace with your desired model ID from aiXplain
+
+### Document Chunking
+Default settings in `server.py`:
+- Chunk size: 1000 characters
+- Chunk overlap: 200 characters
+
+Adjust in the `chunk_text()` function if needed.
+
+## 🧪 Testing
+
+### Test Backend
+```bash
+# Health check
+curl http://localhost:8001/api/health
+
+# Upload PDF
+curl -X POST http://localhost:8001/api/upload-pdf \
+  -F "file=@/path/to/your/document.pdf"
+
+# Search
+curl -X POST http://localhost:8001/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What is AI?", "top_k": 5}'
+```
+
+### Test Frontend
+1. Open `http://localhost:3000` in your browser
+2. Upload a test PDF
+3. Ask sample questions
+4. Verify AI responses and sources
+
+## 📝 Example Queries
+
+- "What are the main principles of AI governance?"
+- "Summarize the key points about data privacy"
+- "What regulations exist for autonomous vehicles?"
+- "Explain the ethical considerations mentioned in the document"
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+**aiXplain API Error:**
+- Verify your API key is correct in `backend/.env`
+- Check API key has sufficient credits
+- Ensure internet connection is stable
+
+**PDF Upload Fails:**
+- Check PDF is not corrupted
+- Verify file size is reasonable (<50MB recommended)
+- Ensure PyPDF2 can read the PDF format
+
+### Frontend Issues
+
+**Backend Connection Error:**
+- Verify backend is running on port 8001
+- Check `REACT_APP_BACKEND_URL` in `frontend/.env`
+- Look for CORS errors in browser console
+
+**Blank Results:**
+- Check browser console for errors
+- Verify backend is responding to `/api/search`
+- Ensure documents are loaded (check `/api/health`)
+
+## 📦 Dependencies
+
+### Backend
+- fastapi==0.110.1
+- uvicorn==0.25.0
+- aixplain==0.2.36
+- PyPDF2==3.0.1
+- PyMuPDF==1.26.5
+- pandas==2.3.3
+- scikit-learn
+- python-dotenv==1.2.1
+
+### Frontend
+- react==18.2.0
+- axios==1.6.8
+- tailwindcss==3.4.3
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🙏 Acknowledgments
+
+- **aiXplain** for providing the AI model API
+- **FastAPI** for the excellent web framework
+- **React** and **Tailwind CSS** for the frontend
+
+## 📞 Support
+
+For issues or questions:
+- Check the [Troubleshooting](#-troubleshooting) section
+- Open an issue on GitHub
+- Contact aiXplain support for API-related issues
+
