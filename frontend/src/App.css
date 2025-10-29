@@ -1,0 +1,10 @@
+/* Import Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles can go here if needed, but for now, rely on Tailwind classes */
+/* Setting a default font for better aesthetics */
+body {
+    font-family: 'Inter', sans-serif;
+}
