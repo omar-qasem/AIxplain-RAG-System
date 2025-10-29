@@ -1,110 +1,101 @@
 # Agentic RAG System for Government Regulations
 
-This project implements a Retrieval-Augmented Generation (RAG) system to answer questions about government regulations, using data from Kaggle and the EPA. The system is designed to be a simple, yet effective, tool for searching and retrieving relevant information from a combined corpus of documents.
+This project implements a Retrieval-Augmented Generation (RAG) system to answer questions about government regulations, using data from Kaggle and the EPA. The system is designed to follow a precise, three-step process: **User Prompt → Document Search → Concise LLM Answer**.
 
 ## Project Overview
 
-The core of this project is a RAG agent that leverages a TF-IDF vector store to find documents relevant to a user's query. The agent then presents snippets of these documents to the user, along with the source and a URL for further reading.
-
-### Data Sources
-
-*   **AI Governance Documents Data:** A Kaggle dataset containing a collection of documents related to AI governance.
-*   **EPA Guidance Documents:** A CSV file of guidance documents from the U.S. Environmental Protection Agency (EPA).
+The core of this project is a RAG agent that leverages a TF-IDF vector store to find documents relevant to a user's query. The most relevant documents are then passed to a Large Language Model (LLM) to generate a **concise, context-grounded answer, free of unnecessary information.**
 
 ### Key Features
 
-*   **Data Ingestion:** Loads and combines data from multiple sources.
+*   **Precise RAG Workflow:** User query is answered based *only* on retrieved documents.
+*   **Concise Answering:** The LLM is strictly prompted to provide a direct answer without extraneous details.
+*   **Data Ingestion:** Loads and combines data from AI Governance documents and EPA Guidance documents.
 *   **Vector Store:** Creates a TF-IDF vector store for efficient document retrieval.
-*   **Document Retrieval:** Retrieves the most relevant documents based on a user's query.
-*   **Command-Line Interface (CLI):** Provides a simple CLI for interacting with the RAG agent.
 
-## Getting Started
+## Getting Started: Running the Demo
 
-### Prerequisites
+Follow these steps to set up the environment, download the necessary data, and run the improved RAG demo.
 
-*   Python 3.11
-*   pip
+### 1. Prerequisites
 
-### Installation
+*   Python 3.11+
+*   An **OpenAI API Key** for the final LLM generation step.
 
-1.  **Clone the Repository**:
+### 2. Setup
 
-    ```bash
-    git clone https://github.com/omar-qasem/AIxplain-RAG-System.git
-    cd AIxplain-RAG-System
-    ```
-
-2.  **Install Required Packages**:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Download Datasets**:
-
-    *   **AI Governance Documents Data**: This dataset needs to be downloaded manually from Kaggle.
-        1.  Go to the Kaggle dataset page: [AI Governance Documents Data](https://www.kaggle.com/datasets/umerhaddii/ai-governance-documents-data)
-        2.  Download the `documents.csv` file.
-        3.  Create the following directory structure within your `AIxplain-RAG-System` folder:
-            `data/ai-governance-documents-data/agora/`
-        4.  Place the downloaded `documents.csv` file into the `agora` folder.
-
-    *   **EPA Guidance Documents**: The `guidance_ow.csv` file is already included in the repository.
-
-### 🔑 API Key Setup
-
-1.  Get your aiXplain API key from [aixplain.com](https://aixplain.com)
-2.  Create a `.env` file in the project root by copying the example:
-
-    ```bash
-    cp .env.example .env
-    ```
-
-3.  Open the newly created `.env` file and paste your actual aiXplain API key:
-
-    ```env
-    AIXPLAIN_API_KEY=your_actual_key_here
-    ```
-
-    **Note**: Replace `your_actual_key_here` with the key you obtained from aiXplain. This file is ignored by Git to keep your key secure.
-
-### Usage
-
-To run the CLI for the RAG agent, execute the following command:
+**A. Clone the Repository**
 
 ```bash
-python cli_rag_agent.py
-# OR (if 'python' doesn't work)
-py cli_rag_agent.py
+git clone https://github.com/omar-qasem/AIxplain-RAG-System.git
+cd AIxplain-RAG-System
 ```
 
-Once the agent is initialized, you can type your query and press Enter. To exit the agent, type `exit`.
+**B. Install Required Packages**
+
+```bash
+pip install -r requirements.txt
+```
+
+**C. Configure API Key**
+
+The RAG system uses an LLM (via the OpenAI API) to generate the final, concise answer.
+
+1.  Create a file named `.env` in the root of the project directory.
+2.  Add your OpenAI API key to the file in the following format:
+
+    ```env
+    OPENAI_API_KEY="YOUR_ACTUAL_OPENAI_KEY_HERE"
+    ```
+
+    *Note: The original `AIXPLAIN_API_KEY` environment variable is no longer used in the main demo script (`rag_system.py`), which now uses the standard `OPENAI_API_KEY` for the LLM step.*
+
+### 3. Download Data
+
+The RAG system relies on two external datasets.
+
+```bash
+# Download the EPA Guidance dataset (optional, as guidance_ow.csv is included)
+python3 download_dataset.py
+
+# Download the AI Governance dataset (REQUIRED)
+python3 download_ai_governance_dataset.py
+```
+
+These scripts will place the necessary CSV files in the correct locations for the `rag_system.py` script to find them.
+
+### 4. Run the Demo
+
+The `rag_system.py` script is configured to run two example queries and demonstrate the full RAG workflow, including the final concise LLM answer.
+
+```bash
+python3 rag_system.py
+```
+
+**Expected Output Flow:**
+
+The script will first load the data and build the vector store. For each query, you will see:
+
+1.  The query being executed.
+2.  The top 5 **Retrieved Documents** (the search step).
+3.  The **Final Answer** (the analysis and concise answering step, generated by the LLM based on the retrieved documents).
+
+---
 
 ## Project Structure
 
 ```
 AIxplain-RAG-System/
-├── data/
-│   └── ai-governance-documents-data/
-│       └── agora/
-│           └── documents.csv
-├── .env.example
+├── .env                  # Your API Key configuration (add this file)
 ├── .gitignore
-├── cli_rag_agent.py
+├── backend/              # (Existing directory)
+├── cli_rag_agent.py      # (Existing CLI, not updated for LLM generation)
 ├── download_ai_governance_dataset.py
 ├── download_dataset.py
+├── frontend/             # (Existing directory)
 ├── guidance_ow.csv
 ├── inspect_kaggle_csv.py
-├── rag_system.py
-├── README.md
+├── rag_system.py         # **Updated with full RAG workflow and LLM generation**
+├── README.md             # This file
 └── requirements.txt
 ```
-
-*   `cli_rag_agent.py`: The main script for the command-line interface.
-*   `rag_system.py`: The core logic for the RAG system, including data loading, vector store creation, and document retrieval.
-*   `download_ai_governance_dataset.py`: A script to download the AI Governance dataset from Kaggle.
-*   `download_dataset.py`: A script to download the initial (problematic) Kaggle dataset.
-*   `guidance_ow.csv`: The EPA guidance documents.
-*   `inspect_kaggle_csv.py`: A script used for debugging the initial Kaggle dataset.
-*   `README.md`: This file.
-
